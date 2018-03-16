@@ -13,30 +13,22 @@
  */
 package io.opentracing.contrib.spymemcached;
 
-import static io.opentracing.contrib.spymemcached.TracingHelper.nullable;
-
 import io.opentracing.Span;
 import net.spy.memcached.internal.GetCompletionListener;
 import net.spy.memcached.internal.GetFuture;
 import net.spy.memcached.ops.OperationStatus;
 
-public class TracingGetCompletionListener implements GetCompletionListener {
+class TracingGetCompletionListener implements GetCompletionListener {
 
   private final Span span;
 
-  public TracingGetCompletionListener(Span span) {
+  TracingGetCompletionListener(Span span) {
     this.span = span;
   }
 
   @Override
-  public void onComplete(GetFuture<?> future) throws Exception {
+  public void onComplete(GetFuture<?> future) {
     OperationStatus status = future.getStatus();
-    span.setTag("status.code", nullable(status.getStatusCode()));
-    if (status.getMessage() != null) {
-      span.setTag("status.message", status.getMessage());
-    }
-    span.setTag("status.success", status.isSuccess());
-
-    span.finish();
+    TracingHelper.setStatusAndFinish(span, status);
   }
 }

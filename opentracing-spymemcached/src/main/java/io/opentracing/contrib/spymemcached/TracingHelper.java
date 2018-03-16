@@ -21,16 +21,16 @@ import io.opentracing.noop.NoopSpan;
 import io.opentracing.tag.Tags;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import net.spy.memcached.ops.OperationStatus;
 
-public class TracingHelper {
+class TracingHelper {
 
   private final Tracer tracer;
   private final boolean traceWithActiveSpanOnly;
   static final String COMPONENT_NAME = "java-memcached";
 
-  public TracingHelper(Tracer tracer, boolean traceWithActiveSpanOnly) {
+  TracingHelper(Tracer tracer, boolean traceWithActiveSpanOnly) {
     this.tracer = tracer;
     this.traceWithActiveSpanOnly = traceWithActiveSpanOnly;
   }
@@ -58,7 +58,7 @@ public class TracingHelper {
         .withTag(Tags.DB_TYPE.getKey(), "memcached");
   }
 
-  public static void onError(Throwable throwable, Span span) {
+  static void onError(Throwable throwable, Span span) {
     Tags.ERROR.set(span, Boolean.TRUE);
 
     if (throwable != null) {
@@ -73,28 +73,12 @@ public class TracingHelper {
     return errorLogs;
   }
 
-  public static String nullable(Object object) {
+  static String nullable(Object object) {
     return object == null ? "null" : object.toString();
   }
 
-  public static String nullableClass(Object object) {
+  static String nullableClass(Object object) {
     return object == null ? "null" : object.getClass().getName();
-  }
-
-  public static String toStringClass(List<?> list) {
-    if (list == null) {
-      return "null";
-    }
-    StringBuilder builder = new StringBuilder();
-    for (int i = 0; i < list.size(); i++) {
-      if (i == 0) {
-        builder.append(nullableClass(list.get(i)));
-      } else {
-        builder.append(", ").append(nullableClass(list.get(i)));
-      }
-    }
-
-    return builder.toString();
   }
 
   public static String toString(Collection<?> collection) {
@@ -115,10 +99,6 @@ public class TracingHelper {
     return builder.toString();
   }
 
-  public Tracer getTracer() {
-    return tracer;
-  }
-
   public Scope activate(Span span) {
     return tracer.scopeManager().activate(span, false);
   }
@@ -126,5 +106,14 @@ public class TracingHelper {
   public Scope activateAndFinish(Span span) {
     return tracer.scopeManager().activate(span, true);
   }
-}
 
+  public static void setStatusAndFinish(Span span, OperationStatus status) {
+    span.setTag("status.code", nullable(status.getStatusCode()));
+    if (status.getMessage() != null) {
+      span.setTag("status.message", status.getMessage());
+    }
+    span.setTag("status.success", status.isSuccess());
+
+    span.finish();
+  }
+}
