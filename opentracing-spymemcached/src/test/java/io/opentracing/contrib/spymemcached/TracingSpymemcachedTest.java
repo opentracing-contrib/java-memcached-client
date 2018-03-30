@@ -64,7 +64,7 @@ public class TracingSpymemcachedTest {
     for (MockSpan span : spans) {
       assertTrue(span.tags().get(Tags.SPAN_KIND.getKey()).equals(Tags.SPAN_KIND_CLIENT));
       assertEquals(TracingHelper.COMPONENT_NAME, span.tags().get(Tags.COMPONENT.getKey()));
-      assertEquals("memcached", span.tags().get(Tags.DB_TYPE.getKey()));
+      assertEquals(TracingHelper.DB_TYPE, span.tags().get(Tags.DB_TYPE.getKey()));
       assertEquals(0, span.generatedErrors().size());
     }
   }

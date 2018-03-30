@@ -267,11 +267,13 @@ public class TracingMemcachedClient extends MemcachedClient {
     span.setTag("casId", casId);
     span.setTag("value", nullable(value));
     span.setTag("transcoder", nullableClass(transcoder));
-    try (Scope ignore = helper.activateAndFinish(span)) {
+    try (Scope ignore = helper.activate(span)) {
       return super.cas(key, casId, value, transcoder);
     } catch (Exception e) {
       onError(e, span);
       throw e;
+    } finally {
+      span.finish();
     }
   }
 
@@ -283,11 +285,13 @@ public class TracingMemcachedClient extends MemcachedClient {
     span.setTag("value", nullable(value));
     span.setTag("expiration", expiration);
     span.setTag("transcoder", nullableClass(transcoder));
-    try (Scope ignore = helper.activateAndFinish(span)) {
+    try (Scope ignore = helper.activate(span)) {
       return super.cas(key, casId, expiration, value, transcoder);
     } catch (Exception e) {
       onError(e, span);
       throw e;
+    } finally {
+      span.finish();
     }
   }
 
@@ -296,11 +300,13 @@ public class TracingMemcachedClient extends MemcachedClient {
     Span span = helper.buildSpan("cas", key);
     span.setTag("casId", casId);
     span.setTag("value", nullable(value));
-    try (Scope ignore = helper.activateAndFinish(span)) {
+    try (Scope ignore = helper.activate(span)) {
       return super.cas(key, casId, value);
     } catch (Exception e) {
       onError(e, span);
       throw e;
+    } finally {
+      span.finish();
     }
   }
 
@@ -310,11 +316,13 @@ public class TracingMemcachedClient extends MemcachedClient {
     span.setTag("casId", casId);
     span.setTag("value", nullable(value));
     span.setTag("expiration", expiration);
-    try (Scope ignore = helper.activateAndFinish(span)) {
+    try (Scope ignore = helper.activate(span)) {
       return super.cas(key, casId, expiration, value);
     } catch (Exception e) {
       onError(e, span);
       throw e;
+    } finally {
+      span.finish();
     }
   }
 
@@ -430,11 +438,13 @@ public class TracingMemcachedClient extends MemcachedClient {
   public <T> CASValue<T> gets(String key, Transcoder<T> transcoder) {
     Span span = helper.buildSpan("gets", key);
     span.setTag("transcoder", nullableClass(transcoder));
-    try (Scope ignore = helper.activateAndFinish(span)) {
+    try (Scope ignore = helper.activate(span)) {
       return super.gets(key, transcoder);
     } catch (Exception e) {
       onError(e, span);
       throw e;
+    } finally {
+      span.finish();
     }
   }
 
@@ -443,11 +453,13 @@ public class TracingMemcachedClient extends MemcachedClient {
     Span span = helper.buildSpan("getAndTouch", key);
     span.setTag("expiration", expiration);
     span.setTag("transcoder", nullableClass(transcoder));
-    try (Scope ignore = helper.activateAndFinish(span)) {
+    try (Scope ignore = helper.activate(span)) {
       return super.getAndTouch(key, expiration, transcoder);
     } catch (Exception e) {
       onError(e, span);
       throw e;
+    } finally {
+      span.finish();
     }
   }
 
@@ -455,22 +467,26 @@ public class TracingMemcachedClient extends MemcachedClient {
   public CASValue<Object> getAndTouch(String key, int expiration) {
     Span span = helper.buildSpan("getAndTouch", key);
     span.setTag("expiration", expiration);
-    try (Scope ignore = helper.activateAndFinish(span)) {
+    try (Scope ignore = helper.activate(span)) {
       return super.getAndTouch(key, expiration);
     } catch (Exception e) {
       onError(e, span);
       throw e;
+    } finally {
+      span.finish();
     }
   }
 
   @Override
   public CASValue<Object> gets(String key) {
     Span span = helper.buildSpan("gets", key);
-    try (Scope ignore = helper.activateAndFinish(span)) {
+    try (Scope ignore = helper.activate(span)) {
       return super.gets(key);
     } catch (Exception e) {
       onError(e, span);
       throw e;
+    } finally {
+      span.finish();
     }
   }
 
@@ -478,22 +494,26 @@ public class TracingMemcachedClient extends MemcachedClient {
   public <T> T get(String key, Transcoder<T> transcoder) {
     Span span = helper.buildSpan("get", key);
     span.setTag("transcoder", nullableClass(transcoder));
-    try (Scope ignore = helper.activateAndFinish(span)) {
+    try (Scope ignore = helper.activate(span)) {
       return super.get(key, transcoder);
     } catch (Exception e) {
       onError(e, span);
       throw e;
+    } finally {
+      span.finish();
     }
   }
 
   @Override
   public Object get(String key) {
     Span span = helper.buildSpan("get", key);
-    try (Scope ignore = helper.activateAndFinish(span)) {
+    try (Scope ignore = helper.activate(span)) {
       return super.get(key);
     } catch (Exception e) {
       onError(e, span);
       throw e;
+    } finally {
+      span.finish();
     }
   }
 
@@ -615,22 +635,26 @@ public class TracingMemcachedClient extends MemcachedClient {
   public <T> Map<String, T> getBulk(Iterator<String> keyIter, Transcoder<T> transcoder) {
     Span span = helper.buildSpan("getBulk");
     span.setTag("transcoder", nullableClass(transcoder));
-    try (Scope ignore = helper.activateAndFinish(span)) {
+    try (Scope ignore = helper.activate(span)) {
       return super.getBulk(keyIter, transcoder);
     } catch (Exception e) {
       onError(e, span);
       throw e;
+    } finally {
+      span.finish();
     }
   }
 
   @Override
   public Map<String, Object> getBulk(Iterator<String> keyIter) {
     Span span = helper.buildSpan("getBulk");
-    try (Scope ignore = helper.activateAndFinish(span)) {
+    try (Scope ignore = helper.activate(span)) {
       return super.getBulk(keyIter);
     } catch (Exception e) {
       onError(e, span);
       throw e;
+    } finally {
+      span.finish();
     }
   }
 
@@ -639,11 +663,13 @@ public class TracingMemcachedClient extends MemcachedClient {
     Span span = helper.buildSpan("getBulk");
     span.setTag("keys", TracingHelper.toString(keys));
     span.setTag("transcoder", nullableClass(transcoder));
-    try (Scope ignore = helper.activateAndFinish(span)) {
+    try (Scope ignore = helper.activate(span)) {
       return super.getBulk(keys, transcoder);
     } catch (Exception e) {
       onError(e, span);
       throw e;
+    } finally {
+      span.finish();
     }
   }
 
@@ -651,11 +677,13 @@ public class TracingMemcachedClient extends MemcachedClient {
   public Map<String, Object> getBulk(Collection<String> keys) {
     Span span = helper.buildSpan("getBulk");
     span.setTag("keys", TracingHelper.toString(keys));
-    try (Scope ignore = helper.activateAndFinish(span)) {
+    try (Scope ignore = helper.activate(span)) {
       return super.getBulk(keys);
     } catch (Exception e) {
       onError(e, span);
       throw e;
+    } finally {
+      span.finish();
     }
   }
 
@@ -664,11 +692,13 @@ public class TracingMemcachedClient extends MemcachedClient {
     Span span = helper.buildSpan("getBulk");
     span.setTag("keys", Arrays.toString(keys));
     span.setTag("transcoder", nullableClass(transcoder));
-    try (Scope ignore = helper.activateAndFinish(span)) {
+    try (Scope ignore = helper.activate(span)) {
       return super.getBulk(transcoder, keys);
     } catch (Exception e) {
       onError(e, span);
       throw e;
+    } finally {
+      span.finish();
     }
   }
 
@@ -676,33 +706,39 @@ public class TracingMemcachedClient extends MemcachedClient {
   public Map<String, Object> getBulk(String... keys) {
     Span span = helper.buildSpan("getBulk");
     span.setTag("keys", Arrays.toString(keys));
-    try (Scope ignore = helper.activateAndFinish(span)) {
+    try (Scope ignore = helper.activate(span)) {
       return super.getBulk(keys);
     } catch (Exception e) {
       onError(e, span);
       throw e;
+    } finally {
+      span.finish();
     }
   }
 
   @Override
   public Map<SocketAddress, String> getVersions() {
     Span span = helper.buildSpan("getVersions");
-    try (Scope ignore = helper.activateAndFinish(span)) {
+    try (Scope ignore = helper.activate(span)) {
       return super.getVersions();
     } catch (Exception e) {
       onError(e, span);
       throw e;
+    } finally {
+      span.finish();
     }
   }
 
   @Override
   public Map<SocketAddress, Map<String, String>> getStats() {
     Span span = helper.buildSpan("getStats");
-    try (Scope ignore = helper.activateAndFinish(span)) {
+    try (Scope ignore = helper.activate(span)) {
       return super.getStats();
     } catch (Exception e) {
       onError(e, span);
       throw e;
+    } finally {
+      span.finish();
     }
   }
 
@@ -710,11 +746,13 @@ public class TracingMemcachedClient extends MemcachedClient {
   public Map<SocketAddress, Map<String, String>> getStats(String arg) {
     Span span = helper.buildSpan("getStats");
     span.setTag("arg", arg);
-    try (Scope ignore = helper.activateAndFinish(span)) {
+    try (Scope ignore = helper.activate(span)) {
       return super.getStats(arg);
     } catch (Exception e) {
       onError(e, span);
       throw e;
+    } finally {
+      span.finish();
     }
   }
 
@@ -722,11 +760,13 @@ public class TracingMemcachedClient extends MemcachedClient {
   public long incr(String key, long by) {
     Span span = helper.buildSpan("incr", key);
     span.setTag("by", by);
-    try (Scope ignore = helper.activateAndFinish(span)) {
+    try (Scope ignore = helper.activate(span)) {
       return super.incr(key, by);
     } catch (Exception e) {
       onError(e, span);
       throw e;
+    } finally {
+      span.finish();
     }
   }
 
@@ -734,11 +774,13 @@ public class TracingMemcachedClient extends MemcachedClient {
   public long incr(String key, int by) {
     Span span = helper.buildSpan("incr", key);
     span.setTag("by", by);
-    try (Scope ignore = helper.activateAndFinish(span)) {
+    try (Scope ignore = helper.activate(span)) {
       return super.incr(key, by);
     } catch (Exception e) {
       onError(e, span);
       throw e;
+    } finally {
+      span.finish();
     }
   }
 
@@ -746,11 +788,13 @@ public class TracingMemcachedClient extends MemcachedClient {
   public long decr(String key, long by) {
     Span span = helper.buildSpan("decr", key);
     span.setTag("by", by);
-    try (Scope ignore = helper.activateAndFinish(span)) {
+    try (Scope ignore = helper.activate(span)) {
       return super.decr(key, by);
     } catch (Exception e) {
       onError(e, span);
       throw e;
+    } finally {
+      span.finish();
     }
   }
 
@@ -758,11 +802,13 @@ public class TracingMemcachedClient extends MemcachedClient {
   public long decr(String key, int by) {
     Span span = helper.buildSpan("decr", key);
     span.setTag("by", by);
-    try (Scope ignore = helper.activateAndFinish(span)) {
+    try (Scope ignore = helper.activate(span)) {
       return super.decr(key, by);
     } catch (Exception e) {
       onError(e, span);
       throw e;
+    } finally {
+      span.finish();
     }
   }
 
@@ -772,11 +818,13 @@ public class TracingMemcachedClient extends MemcachedClient {
     span.setTag("by", by);
     span.setTag("def", def);
     span.setTag("expiration", expiration);
-    try (Scope ignore = helper.activateAndFinish(span)) {
+    try (Scope ignore = helper.activate(span)) {
       return super.incr(key, by, def, expiration);
     } catch (Exception e) {
       onError(e, span);
       throw e;
+    } finally {
+      span.finish();
     }
   }
 
@@ -786,11 +834,13 @@ public class TracingMemcachedClient extends MemcachedClient {
     span.setTag("by", by);
     span.setTag("def", def);
     span.setTag("expiration", expiration);
-    try (Scope ignore = helper.activateAndFinish(span)) {
+    try (Scope ignore = helper.activate(span)) {
       return super.incr(key, by, def, expiration);
     } catch (Exception e) {
       onError(e, span);
       throw e;
+    } finally {
+      span.finish();
     }
   }
 
@@ -800,11 +850,13 @@ public class TracingMemcachedClient extends MemcachedClient {
     span.setTag("by", by);
     span.setTag("def", def);
     span.setTag("expiration", expiration);
-    try (Scope ignore = helper.activateAndFinish(span)) {
+    try (Scope ignore = helper.activate(span)) {
       return super.decr(key, by, def, expiration);
     } catch (Exception e) {
       onError(e, span);
       throw e;
+    } finally {
+      span.finish();
     }
   }
 
@@ -814,11 +866,13 @@ public class TracingMemcachedClient extends MemcachedClient {
     span.setTag("by", by);
     span.setTag("def", def);
     span.setTag("expiration", expiration);
-    try (Scope ignore = helper.activateAndFinish(span)) {
+    try (Scope ignore = helper.activate(span)) {
       return super.decr(key, by, def, expiration);
     } catch (Exception e) {
       onError(e, span);
       throw e;
+    } finally {
+      span.finish();
     }
   }
 
@@ -955,11 +1009,13 @@ public class TracingMemcachedClient extends MemcachedClient {
     Span span = helper.buildSpan("incr", key);
     span.setTag("by", by);
     span.setTag("def", def);
-    try (Scope ignore = helper.activateAndFinish(span)) {
+    try (Scope ignore = helper.activate(span)) {
       return super.incr(key, by, def);
     } catch (Exception e) {
       onError(e, span);
       throw e;
+    } finally {
+      span.finish();
     }
   }
 
@@ -968,11 +1024,13 @@ public class TracingMemcachedClient extends MemcachedClient {
     Span span = helper.buildSpan("incr", key);
     span.setTag("by", by);
     span.setTag("def", def);
-    try (Scope ignore = helper.activateAndFinish(span)) {
+    try (Scope ignore = helper.activate(span)) {
       return super.incr(key, by, def);
     } catch (Exception e) {
       onError(e, span);
       throw e;
+    } finally {
+      span.finish();
     }
   }
 
@@ -981,11 +1039,13 @@ public class TracingMemcachedClient extends MemcachedClient {
     Span span = helper.buildSpan("decr", key);
     span.setTag("by", by);
     span.setTag("def", def);
-    try (Scope ignore = helper.activateAndFinish(span)) {
+    try (Scope ignore = helper.activate(span)) {
       return super.decr(key, by, def);
     } catch (Exception e) {
       onError(e, span);
       throw e;
+    } finally {
+      span.finish();
     }
   }
 
@@ -994,11 +1054,13 @@ public class TracingMemcachedClient extends MemcachedClient {
     Span span = helper.buildSpan("decr", key);
     span.setTag("by", by);
     span.setTag("def", def);
-    try (Scope ignore = helper.activateAndFinish(span)) {
+    try (Scope ignore = helper.activate(span)) {
       return super.decr(key, by, def);
     } catch (Exception e) {
       onError(e, span);
       throw e;
+    } finally {
+      span.finish();
     }
   }
 
@@ -1049,22 +1111,26 @@ public class TracingMemcachedClient extends MemcachedClient {
   @Override
   public Set<String> listSaslMechanisms() {
     Span span = helper.buildSpan("listSaslMechanisms");
-    try (Scope ignore = helper.activateAndFinish(span)) {
+    try (Scope ignore = helper.activate(span)) {
       return super.listSaslMechanisms();
     } catch (Exception e) {
       onError(e, span);
       throw e;
+    } finally {
+      span.finish();
     }
   }
 
   @Override
   public void shutdown() {
     Span span = helper.buildSpan("shutdown");
-    try (Scope ignore = helper.activateAndFinish(span)) {
+    try (Scope ignore = helper.activate(span)) {
       super.shutdown();
     } catch (Exception e) {
       onError(e, span);
       throw e;
+    } finally {
+      span.finish();
     }
   }
 
@@ -1073,11 +1139,13 @@ public class TracingMemcachedClient extends MemcachedClient {
     Span span = helper.buildSpan("shutdown");
     span.setTag("timeout", timeout);
     span.setTag("unit", nullable(unit));
-    try (Scope ignore = helper.activateAndFinish(span)) {
+    try (Scope ignore = helper.activate(span)) {
       return super.shutdown(timeout, unit);
     } catch (Exception e) {
       onError(e, span);
       throw e;
+    } finally {
+      span.finish();
     }
   }
 
@@ -1086,11 +1154,13 @@ public class TracingMemcachedClient extends MemcachedClient {
     Span span = helper.buildSpan("waitForQueues");
     span.setTag("timeout", timeout);
     span.setTag("unit", nullable(unit));
-    try (Scope ignore = helper.activateAndFinish(span)) {
+    try (Scope ignore = helper.activate(span)) {
       return super.waitForQueues(timeout, unit);
     } catch (Exception e) {
       onError(e, span);
       throw e;
+    } finally {
+      span.finish();
     }
   }
 

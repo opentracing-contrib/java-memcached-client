@@ -29,6 +29,7 @@ class TracingHelper {
   private final Tracer tracer;
   private final boolean traceWithActiveSpanOnly;
   static final String COMPONENT_NAME = "java-memcached";
+  static final String DB_TYPE = "memcached";
 
   TracingHelper(Tracer tracer, boolean traceWithActiveSpanOnly) {
     this.tracer = tracer;
@@ -55,7 +56,7 @@ class TracingHelper {
     return tracer.buildSpan(operationName)
         .withTag(Tags.COMPONENT.getKey(), COMPONENT_NAME)
         .withTag(Tags.SPAN_KIND.getKey(), Tags.SPAN_KIND_CLIENT)
-        .withTag(Tags.DB_TYPE.getKey(), "memcached");
+        .withTag(Tags.DB_TYPE.getKey(), DB_TYPE);
   }
 
   static void onError(Throwable throwable, Span span) {
@@ -101,10 +102,6 @@ class TracingHelper {
 
   public Scope activate(Span span) {
     return tracer.scopeManager().activate(span, false);
-  }
-
-  public Scope activateAndFinish(Span span) {
-    return tracer.scopeManager().activate(span, true);
   }
 
   public static void setStatusAndFinish(Span span, OperationStatus status) {
