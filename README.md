@@ -34,6 +34,9 @@ MemcachedClient client = new TracingMemcachedClient(tracer, false,
 client.set("key", 0, "value")
 ```
 
+## License
+
+[Apache 2.0 License](./LICENSE).
 
 [ci-img]: https://travis-ci.org/opentracing-contrib/java-memcached-client.svg?branch=master
 [ci]: https://travis-ci.org/opentracing-contrib/java-memcached-client
