@@ -20,6 +20,7 @@ import static io.opentracing.contrib.spymemcached.TracingHelper.onError;
 import io.opentracing.Scope;
 import io.opentracing.Span;
 import io.opentracing.Tracer;
+import io.opentracing.util.GlobalTracer;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
@@ -58,10 +59,26 @@ public class TracingMemcachedClient extends MemcachedClient {
     helper = new TracingHelper(tracer, traceWithActiveSpanOnly);
   }
 
+  /**
+   * GlobalTracer is used to get tracer
+   */
+  public TracingMemcachedClient(boolean traceWithActiveSpanOnly,
+      InetSocketAddress... ia) throws IOException {
+    this(GlobalTracer.get(), traceWithActiveSpanOnly);
+  }
+
   public TracingMemcachedClient(List<InetSocketAddress> addrs, Tracer tracer,
       boolean traceWithActiveSpanOnly) throws IOException {
     super(addrs);
     helper = new TracingHelper(tracer, traceWithActiveSpanOnly);
+  }
+
+  /**
+   * GlobalTracer is used to get tracer
+   */
+  public TracingMemcachedClient(List<InetSocketAddress> addrs,
+      boolean traceWithActiveSpanOnly) throws IOException {
+    this(addrs, GlobalTracer.get(), traceWithActiveSpanOnly);
   }
 
   public TracingMemcachedClient(ConnectionFactory cf, List<InetSocketAddress> addrs, Tracer tracer,
@@ -69,6 +86,15 @@ public class TracingMemcachedClient extends MemcachedClient {
       throws IOException {
     super(cf, addrs);
     helper = new TracingHelper(tracer, traceWithActiveSpanOnly);
+  }
+
+  /**
+   * GlobalTracer is used to get tracer
+   */
+  public TracingMemcachedClient(ConnectionFactory cf, List<InetSocketAddress> addrs,
+      boolean traceWithActiveSpanOnly)
+      throws IOException {
+    this(cf, addrs, GlobalTracer.get(), traceWithActiveSpanOnly);
   }
 
   @Override
