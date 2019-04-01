@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The OpenTracing Authors
+ * Copyright 2018-2019 The OpenTracing Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -101,7 +101,7 @@ class TracingHelper {
   }
 
   public Scope activate(Span span) {
-    return tracer.scopeManager().activate(span, false);
+    return tracer.scopeManager().activate(span);
   }
 
   public static void setStatusAndFinish(Span span, OperationStatus status) {

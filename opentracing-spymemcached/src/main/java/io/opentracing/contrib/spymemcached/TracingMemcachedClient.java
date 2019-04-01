@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The OpenTracing Authors
+ * Copyright 2018-2019 The OpenTracing Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -1091,6 +1091,7 @@ public class TracingMemcachedClient extends MemcachedClient {
   }
 
   @Override
+  @Deprecated
   public OperationFuture<Boolean> delete(String key, int hold) {
     Span span = helper.buildSpan("delete", key);
     span.setTag("hold", hold);
